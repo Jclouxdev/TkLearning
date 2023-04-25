@@ -38,7 +38,9 @@ class ImageResizer:
             label=Strings["menu"]["save_as"]["label"],
             command=self.save_image,
             state=tk.DISABLED,
+            accelerator="Ctrl+S",
         )
+        self.master.bind("<Control-s>", self.save_image)  # shortcut
 
         # Add "Exit"
         self.option_menu.add_command(
@@ -94,6 +96,9 @@ class ImageResizer:
         self.canvas.pack(side=tk.BOTTOM)
 
     def open_image(self, event=None):
+        f = open("./Langs/FR.json")
+        Strings = json.load(f)
+
         file_path = filedialog.askopenfilename()
         if file_path:
             self.image = Image.open(file_path)
@@ -101,8 +106,11 @@ class ImageResizer:
             self.canvas.config(width=self.image.width, height=self.image.height)
             self.canvas.create_image(0, 0, anchor=tk.NW, image=self.tk_image)
             self.save_button.config(state=tk.NORMAL)
+            self.file_menu.entryconfig(
+                Strings["menu"]["save_as"]["label"], state=tk.NORMAL
+            )
 
-    def save_image(self):
+    def save_image(self, event=None):
         width = self.width_entry.get()
         height = self.height_entry.get()
 
