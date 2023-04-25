@@ -1,0 +1,34 @@
+{
+  "menu": {
+    "file": "File",
+    "options": "Options",
+    "change_lang": "Language",
+    "open": {
+      "label": "Open",
+      "accelerator": "Ctrl+O"
+    },
+    "save_as": {
+      "label": "Save As"
+    },
+    "quit": {
+      "label": "Quit",
+      "accelerator": "Ctrl+Q"
+    }
+  },
+  "widgets": {
+    "frame": {
+      "open_button": "Open Image",
+      "width_label": "Width (px) :",
+      "height_label": "Height (px) :",
+      "format_options": {
+        "jpeg": "JPEG",
+        "png": "PNG",
+        "bmp": "BMP"
+      },
+      "save_button": "Save new image"
+    },
+    "error_label": {
+      "text": "Please enter a width and height"
+    }
+  }
+}

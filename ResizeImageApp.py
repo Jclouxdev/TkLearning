@@ -1,29 +1,73 @@
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 from PIL import Image, ImageTk
+import json
 
 
 class ImageResizer:
     def __init__(self, master):
+        # Langues
+        f = open("./Langs/FR.json")
+        Strings = json.load(f)
+
         self.master = master
         master.title("Image Resizer")
+
+        # Create the menu bar
+        self.menu_bar = tk.Menu(master)
+        master.config(menu=self.menu_bar)
+
+        # Create the "File" menu
+        self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.option_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label=Strings["menu"]["file"], menu=self.file_menu)
+        self.menu_bar.add_cascade(
+            label=Strings["menu"]["options"], menu=self.option_menu
+        )
+
+        # Add "Open" and "Save As" options to the "File" menu
+        self.file_menu.add_command(
+            label=Strings["menu"]["open"]["label"],
+            command=self.open_image,
+            accelerator="Ctrl+O",
+        )
+        self.master.bind("<Control-o>", self.open_image)  # shortcut
+
+        self.file_menu.add_command(
+            label=Strings["menu"]["save_as"]["label"],
+            command=self.save_image,
+            state=tk.DISABLED,
+        )
+
+        # Add "Exit"
+        self.option_menu.add_command(
+            label=Strings["menu"]["quit"]["label"], command=exit, accelerator="Ctrl+Q"
+        )
+        self.master.bind("<Control-q>", exit)  # Shortcut
 
         # Créer un widget Frame pour placer les champs et les boutons sur la même ligne
         self.frame = tk.Frame(master)
         self.frame.pack()
 
         self.open_button = tk.Button(
-            self.frame, text="Open Image", command=self.open_image
+            self.frame,
+            text=Strings["widgets"]["frame"]["open_button"],
+            command=self.open_image,
         )
         self.open_button.pack(side=tk.LEFT)
 
-        self.width_label = tk.Label(self.frame, text="Width (px):")
+        self.width_label = tk.Label(
+            self.frame, text=Strings["widgets"]["frame"]["width_label"]
+        )
         self.width_label.pack(side=tk.LEFT)
 
         self.width_entry = tk.Entry(self.frame)
         self.width_entry.pack(side=tk.LEFT)
 
-        self.height_label = tk.Label(self.frame, text="Height (px):")
+        self.height_label = tk.Label(
+            self.frame, text=Strings["widgets"]["frame"]["height_label"]
+        )
         self.height_label.pack(side=tk.LEFT)
 
         self.height_entry = tk.Entry(self.frame)
@@ -36,7 +80,10 @@ class ImageResizer:
         self.format_menu.pack(side=tk.LEFT)
 
         self.save_button = tk.Button(
-            self.frame, text="Save Image", command=self.save_image, state=tk.DISABLED
+            self.frame,
+            text=Strings["widgets"]["frame"]["save_button"],
+            command=self.save_image,
+            state=tk.DISABLED,
         )
         self.save_button.pack(side=tk.LEFT)
 
@@ -46,7 +93,7 @@ class ImageResizer:
         self.canvas = tk.Canvas(master)
         self.canvas.pack(side=tk.BOTTOM)
 
-    def open_image(self):
+    def open_image(self, event=None):
         file_path = filedialog.askopenfilename()
         if file_path:
             self.image = Image.open(file_path)
