@@ -17,17 +17,23 @@ class ImageResizer:
         )
         self.open_button.pack(side=tk.LEFT)
 
-        self.width_label = tk.Label(self.frame, text="Width:")
+        self.width_label = tk.Label(self.frame, text="Width (px):")
         self.width_label.pack(side=tk.LEFT)
 
         self.width_entry = tk.Entry(self.frame)
         self.width_entry.pack(side=tk.LEFT)
 
-        self.height_label = tk.Label(self.frame, text="Height:")
+        self.height_label = tk.Label(self.frame, text="Height (px):")
         self.height_label.pack(side=tk.LEFT)
 
         self.height_entry = tk.Entry(self.frame)
         self.height_entry.pack(side=tk.LEFT)
+
+        self.format_var = tk.StringVar(value="JPEG")
+        self.format_menu = tk.OptionMenu(
+            self.frame, self.format_var, "JPEG", "PNG", "BMP"
+        )
+        self.format_menu.pack(side=tk.LEFT)
 
         self.save_button = tk.Button(
             self.frame, text="Save Image", command=self.save_image, state=tk.DISABLED
@@ -47,12 +53,15 @@ class ImageResizer:
             self.save_button.config(state=tk.NORMAL)
 
     def save_image(self):
-        file_path = filedialog.asksaveasfilename(defaultextension=".jpg")
+        file_path = filedialog.asksaveasfilename(
+            defaultextension="." + self.format_var.get().lower()
+        )
         if file_path:
             width = int(self.width_entry.get())
             height = int(self.height_entry.get())
+            format = self.format_var.get()
             resized_image = self.image.resize((width, height), Image.ANTIALIAS)
-            resized_image.save(file_path)
+            resized_image.save(file_path, format=format)
 
 
 root = tk.Tk()
