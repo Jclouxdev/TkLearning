@@ -40,6 +40,9 @@ class ImageResizer:
         )
         self.save_button.pack(side=tk.LEFT)
 
+        self.error_label = tk.Label(master, text="", fg="red")
+        self.error_label.pack(side=tk.TOP)
+
         self.canvas = tk.Canvas(master)
         self.canvas.pack(side=tk.BOTTOM)
 
@@ -53,15 +56,29 @@ class ImageResizer:
             self.save_button.config(state=tk.NORMAL)
 
     def save_image(self):
+        width = self.width_entry.get()
+        height = self.height_entry.get()
+
+        if not width or not height:
+            self.error_label.config(text="Please enter a width and height")
+            return
+
         file_path = filedialog.asksaveasfilename(
             defaultextension="." + self.format_var.get().lower()
         )
         if file_path:
-            width = int(self.width_entry.get())
-            height = int(self.height_entry.get())
+            width = int(width)
+            height = int(height)
             format = self.format_var.get()
             resized_image = self.image.resize((width, height), Image.ANTIALIAS)
             resized_image.save(file_path, format=format)
+
+            self.error_label.config(text="Image saved successfully")
+            # reset fields
+            self.width_entry.delete(0, tk.END)
+            self.height_entry.delete(0, tk.END)
+            self.canvas.delete("all")
+            self.save_button.config(state=tk.DISABLED)
 
 
 root = tk.Tk()
